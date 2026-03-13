@@ -37,7 +37,6 @@ if os.path.exists(CORPUS_PATH):
 else:
     from datasets import load_dataset
 
-    print("Downloading dataset (only happens once)...")
     ds = load_dataset("theelderemo/genius-lyrics-cleaned", split="train")
     print(f"Total songs: {len(ds)}")
 
@@ -52,7 +51,7 @@ else:
     filtered = filtered.select(indices)
     print(f"Capped to: {len(filtered)} songs")
 
-    print("Preprocessing (takes a few minutes)...")
+    print("Preprocessing...")
     corpus = []
     for row in filtered:
         corpus.append({
@@ -69,7 +68,7 @@ else:
     print("Saving to disk...")
     with open(CORPUS_PATH, "w") as f:
         json.dump(corpus, f)
-    print("Saved! Next time this loads instantly.")
+    print("Saved!")
 
 print("\nBuilding BM25 index...")
 bm25 = BM25Okapi([doc["tokens"] for doc in corpus])
@@ -89,7 +88,7 @@ def search(query, top_k=5):
 queries = [
     "rain alone window night",
     "hopeful for future",
-    "songs that incldue the word \"dreams\"",
+    "songs that include the word \"dreams\"",
     "road trip freedom highway",
     "heartbreak crying moving on",
     "dancing drunk forget problems",
@@ -99,7 +98,7 @@ queries = [
     "everything is changing",
 ]
 
-print("QUERY RESULTS")
+print("BM25 Search Results:")
 
 for q in queries:
     search(q)
